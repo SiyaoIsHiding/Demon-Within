@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2925734768443257802
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2281267993463677436}
+  m_Layer: 0
+  m_Name: Attack Hitbox Socket
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2281267993463677436
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2925734768443257802}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -1.3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4195485677522116896}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &4195485677267394570
 GameObject:
   m_ObjectHideFlags: 0
@@ -111,7 +142,7 @@ GameObject:
   - component: {fileID: 4195485677522116927}
   - component: {fileID: 4195485677522116900}
   - component: {fileID: 4195485677522116899}
-  - component: {fileID: 4195485677522116898}
+  - component: {fileID: 2553286754997126071}
   - component: {fileID: 4195485677522116901}
   m_Layer: 0
   m_Name: BasicEnemy
@@ -133,6 +164,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4195485677267394573}
+  - {fileID: 2281267993463677436}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -238,7 +270,7 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &4195485677522116898
+--- !u!114 &2553286754997126071
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -247,7 +279,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4195485677522116924}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1c4e99e6e3b01049bf52e2b57e2b54c, type: 3}
+  m_Script: {fileID: 11500000, guid: 5d66463aaf6502b4d9e7808c1f5715b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   navMeshAgentComp: {fileID: 4195485677522116899}
@@ -255,6 +287,13 @@ MonoBehaviour:
   target: {fileID: 0}
   faceTargetLeeway: 20
   rotationSpeed: 200
+  hitboxes: {fileID: 11400000, guid: 8af55faebdebca1438d85eccba3708d0, type: 2}
+  attackSocket: {fileID: 2281267993463677436}
+  attackRange: 5
+  attackHitboxDuration: 0.2
+  firstHitDelay: 0.5
+  comboHitDelay: 0.2
+  attackLoopDelay: 2
 --- !u!114 &4195485677522116901
 MonoBehaviour:
   m_ObjectHideFlags: 0
