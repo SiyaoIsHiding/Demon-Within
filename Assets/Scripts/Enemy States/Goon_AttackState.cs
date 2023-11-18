@@ -31,7 +31,7 @@ public class Goon_AttackState : Abstract_EnemyState
         float angleToTarget = Vector3.Angle(lineToTarget, AIController.transform.forward);
         if (angleToTarget >= AIController.faceTargetLeeway)
         {
-            AIController.transform.rotation = Quaternion.RotateTowards(AIController.transform.rotation, AIController.target.transform.rotation, AIController.rotationSpeed * Time.deltaTime);
+            AIController.transform.rotation = Quaternion.LookRotation(lineToTarget);
         }
 
         // Start attacking if the player is in range

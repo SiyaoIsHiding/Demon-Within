@@ -25,7 +25,7 @@ public class BaseEnemyAIController : MonoBehaviour
     {
         ChangeState(passiveState);
 
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(2);
 
         currentState.OnAnger();
     }
