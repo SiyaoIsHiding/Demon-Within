@@ -15,6 +15,7 @@ public class BaseEnemyAIController : MonoBehaviour
     [Range(0, 180)]
     public float faceTargetLeeway;
     public float rotationSpeed;
+    public HitboxContainer hitboxes;
 
     public Goon_AttackState attackState = new Goon_AttackState();
     public Goon_PassiveState passiveState = new Goon_PassiveState();
@@ -24,7 +25,7 @@ public class BaseEnemyAIController : MonoBehaviour
     {
         ChangeState(passiveState);
 
-        yield return new WaitForSeconds(6);
+        yield return new WaitForSeconds(2);
 
         currentState.OnAnger();
     }
