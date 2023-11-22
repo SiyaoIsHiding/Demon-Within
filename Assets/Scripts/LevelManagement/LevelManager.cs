@@ -15,6 +15,7 @@ public class LevelManager : MonoBehaviour
 
     public float dist;
 
+    public static LevelManager current;
     public enum State
     {
         Battle,
@@ -23,6 +24,17 @@ public class LevelManager : MonoBehaviour
 
     [SerializeField] private State _currentState;
 
+    private void Awake()
+    {
+        current = this;
+    }
+
+    public Action becomeFighting;
+
+    public void IsAvailableInteract(Boolean available)
+    {
+        
+    }
     void Start()
     {
         InputController.current.onEscapePressed += Pause;
