@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // This script holds key enemy statistics like health and damage. Damage and debuffs should be done to this component.
-public class BaseEnemyStatus : MonoBehaviour
+public class BaseEnemyStatus : MonoBehaviour, IHuman
 {
     [SerializeField]
     private float maxHealth;
@@ -19,18 +19,13 @@ public class BaseEnemyStatus : MonoBehaviour
         currentHealth = maxHealth;
     }
 
-    public float TakeDamage(float damageAmount)
+    public void TakeDamage(float damageAmount)
     {
         currentHealth -= damageAmount;
-        if (currentHealth > 0)
+
+        if (currentHealth <= 0)
         {
-            return currentHealth;
-        }
-        else
-        {
-            // If game starts crashing randomly after the enemy dies sometimes, it might be these two lines lol
-            Invoke(nameof(Die), 0);
-            return 0;
+            Die();
         }
     }
 
@@ -39,7 +34,7 @@ public class BaseEnemyStatus : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public float GetCurrentHealth()
+    public float GetHealth()
     {
         return currentHealth;
     }
