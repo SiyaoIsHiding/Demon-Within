@@ -12,6 +12,8 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject enemy;
     [SerializeField] private GameObject battleCanvas;
+    [SerializeField] private AudioSource bgm;
+    [SerializeField] private AudioClip battleClip;
 
     public float dist;
 
@@ -123,6 +125,8 @@ public class LevelManager : MonoBehaviour
     private void OnEnterBattle()
     {
         battleCanvas.SetActive(true);
+        bgm.clip = battleClip;
+        bgm.Play();
     }
 
     private void UpdateBattle()
