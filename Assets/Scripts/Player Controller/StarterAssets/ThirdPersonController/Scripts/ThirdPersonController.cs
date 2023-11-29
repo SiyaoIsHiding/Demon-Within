@@ -87,6 +87,7 @@ namespace StarterAssets
         private float _rotationVelocity;
         private float _verticalVelocity;
         private float _terminalVelocity = 53.0f;
+        public float player_attack_range = 2f;
 
         // timeout deltatime
         private float _jumpTimeoutDelta;
@@ -99,6 +100,10 @@ namespace StarterAssets
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
         private int _animIDAttack;
+
+        // bool
+        public bool isAttacking = false;
+        private bool withinAttackingRange = false;
 
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput;
@@ -137,7 +142,7 @@ namespace StarterAssets
         private void Start()
         {
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
-            
+
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<StarterAssetsInputs>();
@@ -158,10 +163,18 @@ namespace StarterAssets
         {
             _hasAnimator = TryGetComponent(out _animator);
 
-            JumpAndGravity();
             GroundedCheck();
-            Move();
-            HandleAttackInput();
+
+            if (Grounded && withinAttackingRange) //and within distance of enemy:
+            {
+                HandleAttackInput();
+            }
+
+            if (!isAttacking)
+            {
+                JumpAndGravity();
+                Move();
+            }
         }
 
         private void LateUpdate()
@@ -183,15 +196,17 @@ namespace StarterAssets
         #region attacks
         private void HandleAttackInput()
         {
-            if (_input.lightAttack)
+            // Check for light attack input
+            if (_input.lightAttack && !isAttacking && Grounded)
             {
-                _animator.SetBool("isAttacking", true);
+                isAttacking = true;
                 PerformLightAttack();
             }
 
             // Check for heavy attack input
-            if (_input.heavyAttack)
+            if (_input.heavyAttack && !isAttacking && Grounded)
             {
+                isAttacking = true;
                 PerformHeavyAttack();
             }
         }
@@ -199,24 +214,63 @@ namespace StarterAssets
         {
             // Set the Animator trigger for light attack
             _animator.SetBool("LightAttack", true);
-            
+
             // attack logic, such as detecting hits
-            
-            //StartCoroutine(ResetAttackAfterDelay("LightAttack", _animator.GetCurrentAnimatorClipInfo(0)[0].clip.length));
+            PerformAttack(15, 30);
         }
 
         private void PerformHeavyAttack()
         {
             // Set the Animator trigger for heavy attack
-            _animator.SetTrigger("HeavyAttack");
+            _animator.SetBool("HeavyAttack", true);
 
             // attack logic
+            PerformAttack(30, 65);
         }
-        private IEnumerator ResetAttackAfterDelay(string parameterName, float delay)
+
+        void PerformAttack(float min_attack_dmg, float max_attack_dmg)
         {
-            yield return new WaitForSeconds(delay);
-            _animator.SetBool(parameterName, false);
+            RaycastHit hitInfo;
+            Vector3 origin = transform.position;
+            Vector3 direction = transform.forward;
+            float sphere_radius = 1f;
+
+            // Perform the spherecast
+            if (Physics.SphereCast(origin, sphere_radius, direction, out hitInfo, player_attack_range))
+            {
+                // Visualize spherecast
+                Vector3 debug_ray_start = new Vector3(transform.position.x, transform.position.y + GetComponent<CharacterController>().height / 2, transform.position.z);
+
+                // Check if the hit object is an enemy and apply damage
+                BaseEnemyStatus enemy = hitInfo.collider.GetComponent<BaseEnemyStatus>();
+                if (enemy != null)
+                {
+                    //debug (can comment out final build):
+                    Vector3 debug_hitinfo_start = new Vector3(enemy.transform.position.x, enemy.transform.position.y + enemy.GetComponent<CapsuleCollider>().height / 2, enemy.transform.position.z);
+                    Debug.DrawLine(debug_ray_start, debug_hitinfo_start, Color.green, 100.0f);
+
+                    //deal dmg:
+                    float rand_dmg = Random.Range(min_attack_dmg, max_attack_dmg);
+                    enemy.TakeDamage(rand_dmg);
+                    Debug.Log("Successful attack! Did " + rand_dmg + " damage!");
+
+                    //idk if destroying enemy will still be in final version, so given 2 options:
+                    if (enemy.GetHealth() <= 0) // no health
+                    {
+                        Debug.Log("Enemy killed!");
+                        withinAttackingRange = false;
+                    }
+
+                    if (enemy == null) //destroyed enemy obj (after final attack)
+                    {
+                        Debug.Log("Enemy killed!");
+                        withinAttackingRange = false;
+                    }
+                }
+
+            }
         }
+
         #endregion
 
 
@@ -436,5 +490,30 @@ namespace StarterAssets
                 AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
             }
         }
+
+
+
+        #region trigger_logic
+        //enemy & player trigger logic:
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.GetComponent<BaseEnemyStatus>()) //in range of enemy
+            {
+                withinAttackingRange = true;
+                Debug.Log("withinAttackingRange!");
+                //LevelManager.current.IsAvaialbleInteract(true); <= not in current build?
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.gameObject.GetComponent<BaseEnemyStatus>()) //exiting range of enemy
+            {
+                withinAttackingRange = false;
+                Debug.Log("left Attacking Range!");
+                LevelManager.current.becomeFighting?.Invoke();
+            }
+        }
+
     }
 }
