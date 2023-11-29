@@ -514,6 +514,6 @@ namespace StarterAssets
                 LevelManager.current.becomeFighting?.Invoke();
             }
         }
-
+        #endregion
     }
 }
