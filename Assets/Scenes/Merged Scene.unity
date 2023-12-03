@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2174.0742, g: 2241.3945, b: 2583.621, a: 1}
+  m_IndirectSpecularColor: {r: 2173.6836, g: 2240.9766, b: 2583.3906, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2141,6 +2141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e209dfa9aeebaa4dba5e787cc7f48ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHP: 10
 --- !u!54 &321933284
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -16539,6 +16540,8 @@ MonoBehaviour:
   player: {fileID: 0}
   enemy: {fileID: 1364673111}
   battleCanvas: {fileID: 0}
+  bgm: {fileID: 0}
+  battleClip: {fileID: 0}
   dist: 0
   _currentState: 0
 --- !u!1 &1878551194 stripped
