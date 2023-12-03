@@ -5,10 +5,17 @@ using UnityEngine;
 
 public class Player : MonoBehaviour, IHuman
 {
+    [SerializeField]
+    private float maxHP;
 
     public event Action OnPlayerDeath;
     private float hp;
-    
+
+    private void Start()
+    {
+        hp = maxHP;
+    }
+
     public float GetHealth()
     {
         return hp;
@@ -17,6 +24,7 @@ public class Player : MonoBehaviour, IHuman
     public void TakeDamage(float amount)
     {
         hp -= amount;
+
         if (hp <= 0)
         {
             //player death event:
